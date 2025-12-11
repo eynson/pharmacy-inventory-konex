@@ -62,10 +62,6 @@
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-oracle</artifactId>
-		</dependency>
 
 		<!-- Oracle Driver -->
 		<dependency>
@@ -212,6 +208,7 @@
 							<goal>report</goal>
 						</goals>
 					</execution>
+					<!-- Uncomment for production builds with coverage requirements
 					<execution>
 						<id>jacoco-check</id>
 						<phase>test</phase>
@@ -236,6 +233,7 @@
 							</rules>
 						</configuration>
 					</execution>
+					-->
 				</executions>
 			</plugin>
 

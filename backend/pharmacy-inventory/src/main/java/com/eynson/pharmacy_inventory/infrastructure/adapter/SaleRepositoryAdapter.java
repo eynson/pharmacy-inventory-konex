@@ -1,16 +1,18 @@
 package com.eynson.pharmacy_inventory.infrastructure.adapter;
 
+import com.eynson.pharmacy_inventory.domain.model.Money;
 import com.eynson.pharmacy_inventory.domain.model.Sale;
 import com.eynson.pharmacy_inventory.domain.model.SaleId;
+import com.eynson.pharmacy_inventory.domain.model.MedicineId;
 import com.eynson.pharmacy_inventory.domain.port.out.SaleRepositoryPort;
 import com.eynson.pharmacy_inventory.infrastructure.entity.SaleEntity;
 import com.eynson.pharmacy_inventory.infrastructure.repository.SaleJpaRepository;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.time.LocalDateTime;
 
 @Component
 public class SaleRepositoryAdapter implements SaleRepositoryPort {
@@ -43,6 +45,12 @@ public class SaleRepositoryAdapter implements SaleRepositoryPort {
     }
 
     @Override
+    public Optional<Sale> findById(String saleId) {
+        return saleJpaRepository.findById(saleId)
+                .map(this::toDomain);
+    }
+
+    @Override
     public List<Sale> findByDateRange(LocalDateTime startDate, LocalDateTime endDate,
                                       Integer page, Integer pageSize) {
         return saleJpaRepository.findByDateRange(startDate, endDate)
@@ -54,7 +62,7 @@ public class SaleRepositoryAdapter implements SaleRepositoryPort {
     }
 
     @Override
-    public void delete(SaleId id) {
+    public void deleteById(SaleId id) {
         saleJpaRepository.deleteById(id.getValue());
     }
 
@@ -64,26 +72,27 @@ public class SaleRepositoryAdapter implements SaleRepositoryPort {
     }
 
     @Override
-    public long countByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
-        return saleJpaRepository.findByDateRange(startDate, endDate).size();
-    }
-
-    @Override
-    public List<Sale> findByMedicineId(String medicineId) {
-        return saleJpaRepository.findByMedicineId(medicineId)
-                .stream()
-                .map(this::toDomain)
-                .collect(Collectors.toList());
+    public SaleRepositoryPort.PaginatedResult<Sale> findAll(Integer page, Integer pageSize) {
+        var result = saleJpaRepository.findAll(
+                org.springframework.data.domain.PageRequest.of(page, pageSize)
+        );
+        return new SaleRepositoryPort.PaginatedResult<>(
+                result.getContent().stream().map(this::toDomain).collect(Collectors.toList()),
+                result.getTotalPages(),
+                result.getTotalElements(),
+                page,
+                pageSize
+        );
     }
 
     private Sale toDomain(SaleEntity entity) {
         return Sale.reconstruct(
                 SaleId.from(entity.getId()),
-                com.eynson.pharmacy_inventory.domain.model.MedicineId.from(entity.getMedicineId()),
+                MedicineId.from(entity.getMedicineId()),
                 entity.getMedicineName(),
                 entity.getQuantitySold(),
-                new com.eynson.pharmacy_inventory.domain.model.Money(entity.getUnitValue()),
-                new com.eynson.pharmacy_inventory.domain.model.Money(entity.getTotalValue()),
+                Money.from(entity.getUnitValue()),
+                Money.from(entity.getTotalValue()),
                 entity.getSaleDateTime(),
                 entity.getCreatedAt()
         );

@@ -4,18 +4,52 @@ import com.eynson.pharmacy_inventory.application.dto.request.CreateMedicineReque
 import com.eynson.pharmacy_inventory.application.dto.request.UpdateMedicineRequest;
 import com.eynson.pharmacy_inventory.application.dto.response.MedicineResponse;
 import com.eynson.pharmacy_inventory.domain.model.Medicine;
+import com.eynson.pharmacy_inventory.domain.model.Money;
+import com.eynson.pharmacy_inventory.domain.model.Quantity;
 import com.eynson.pharmacy_inventory.domain.port.in.CreateMedicineUseCase;
 import com.eynson.pharmacy_inventory.domain.port.in.UpdateMedicineUseCase;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
+@Component
 @Mapper(componentModel = "spring")
 public interface MedicineMapper {
 
-    @Mapping(target = "id", ignore = true)
-    MedicineResponse toResponse(Medicine medicine);
+    default MedicineResponse toResponse(Medicine medicine) {
+        return new MedicineResponse(
+                medicine.getId().getValue(),
+                medicine.getName(),
+                medicine.getFactoryLaboratory(),
+                medicine.getManufacturingDate(),
+                medicine.getExpirationDate(),
+                medicine.getQuantityInStock().getValue(),
+                medicine.getUnitValue().getAmount(),
+                medicine.isExpired()
+        );
+    }
 
-    CreateMedicineUseCase.CreateMedicineCommand toCreateCommand(CreateMedicineRequest request);
+    default CreateMedicineUseCase.CreateMedicineCommand toCreateCommand(CreateMedicineRequest request) {
+        return new CreateMedicineUseCase.CreateMedicineCommand(
+                request.name(),
+                request.factoryLaboratory(),
+                request.manufacturingDate(),
+                request.expirationDate(),
+                request.quantityInStock(),
+                request.unitValue().toPlainString()
+        );
+    }
 
-    UpdateMedicineUseCase.UpdateMedicineCommand toUpdateCommand(UpdateMedicineRequest request);
+    default UpdateMedicineUseCase.UpdateMedicineCommand toUpdateCommand(UpdateMedicineRequest request) {
+        return new UpdateMedicineUseCase.UpdateMedicineCommand(
+                request.id(),
+                request.name(),
+                request.factoryLaboratory(),
+                request.manufacturingDate(),
+                request.expirationDate(),
+                request.quantityInStock(),
+                request.unitValue().toPlainString()
+        );
+    }
 }

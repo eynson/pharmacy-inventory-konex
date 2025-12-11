@@ -2,6 +2,7 @@ package com.eynson.pharmacy_inventory.infrastructure.adapter;
 
 import com.eynson.pharmacy_inventory.domain.model.Medicine;
 import com.eynson.pharmacy_inventory.domain.model.MedicineId;
+import com.eynson.pharmacy_inventory.domain.model.Money;
 import com.eynson.pharmacy_inventory.domain.port.out.MedicineRepositoryPort;
 import com.eynson.pharmacy_inventory.infrastructure.entity.MedicineEntity;
 import com.eynson.pharmacy_inventory.infrastructure.repository.MedicineJpaRepository;
@@ -9,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -46,41 +46,49 @@ public class MedicineRepositoryAdapter implements MedicineRepositoryPort {
     }
 
     @Override
-    public List<Medicine> findAll(Integer page, Integer pageSize, String search) {
+    public Optional<Medicine> findById(String medicineId) {
+        return medicineJpaRepository.findById(medicineId)
+                .map(this::toDomain);
+    }
+
+    @Override
+    public PaginatedResult<Medicine> findAll(Integer page, Integer pageSize, String search, String sortBy) {
         Pageable pageable = PageRequest.of(page, pageSize);
         var result = search != null && !search.isEmpty()
                 ? medicineJpaRepository.findByNameOrFactoryLaboratory(search, pageable)
                 : medicineJpaRepository.findAll(pageable);
-        return result.stream()
+        
+        var content = result.stream()
                 .map(this::toDomain)
                 .collect(Collectors.toList());
+        
+        return new PaginatedResult<>(
+                content,
+                result.getTotalPages(),
+                result.getTotalElements(),
+                page,
+                pageSize
+        );
     }
 
     @Override
-    public void delete(MedicineId id) {
+    public void deleteById(MedicineId id) {
         medicineJpaRepository.deleteById(id.getValue());
     }
 
     @Override
-    public boolean exists(MedicineId id) {
+    public void deleteById(String medicineId) {
+        medicineJpaRepository.deleteById(medicineId);
+    }
+
+    @Override
+    public boolean existsById(MedicineId id) {
         return medicineJpaRepository.existsById(id.getValue());
     }
 
     @Override
     public long count() {
         return medicineJpaRepository.count();
-    }
-
-    @Override
-    public long countBySearch(String search) {
-        Pageable pageable = PageRequest.of(0, Integer.MAX_VALUE);
-        return medicineJpaRepository.findByNameOrFactoryLaboratory(search, pageable).getTotalElements();
-    }
-
-    @Override
-    public boolean existsByName(String name) {
-        return medicineJpaRepository.findAll().stream()
-                .anyMatch(m -> m.getName().equalsIgnoreCase(name));
     }
 
     private Medicine toDomain(MedicineEntity entity) {
@@ -91,7 +99,7 @@ public class MedicineRepositoryAdapter implements MedicineRepositoryPort {
                 entity.getManufacturingDate(),
                 entity.getExpirationDate(),
                 entity.getQuantityInStock(),
-                new com.eynson.pharmacy_inventory.domain.model.Money(entity.getUnitValue()),
+                Money.from(entity.getUnitValue()),
                 entity.getCreatedAt(),
                 entity.getUpdatedAt()
         );

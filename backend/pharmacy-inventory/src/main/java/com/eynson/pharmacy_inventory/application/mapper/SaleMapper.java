@@ -2,10 +2,20 @@ package com.eynson.pharmacy_inventory.application.mapper;
 
 import com.eynson.pharmacy_inventory.application.dto.response.SaleResponse;
 import com.eynson.pharmacy_inventory.domain.model.Sale;
-import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface SaleMapper {
+@Component
+public class SaleMapper {
 
-    SaleResponse toResponse(Sale sale);
+    public SaleResponse toResponse(Sale sale) {
+        return new SaleResponse(
+                sale.getId().getValue(),
+                sale.getMedicineId().getValue(),
+                sale.getMedicineName(),
+                sale.getQuantitySold().getValue(),
+                sale.getUnitValue().getAmount(),
+                sale.getTotalValue().getAmount(),
+                sale.getSaleDateTime()
+        );
+    }
 }

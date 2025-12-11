@@ -65,7 +65,8 @@ public class MedicineApplicationService {
         var query = new GetMedicinesUseCase.GetMedicinesQuery(
                 request.page(),
                 request.pageSize(),
-                request.search()
+                request.search(),
+                "name"
         );
         var result = getMedicinesUseCase.execute(query);
         var medicineResponses = result.content().stream()
@@ -73,7 +74,7 @@ public class MedicineApplicationService {
                 .collect(Collectors.toList());
         return new PagedMedicineResponse(
                 medicineResponses,
-                result.page(),
+                result.currentPage(),
                 result.pageSize(),
                 result.totalElements(),
                 result.totalPages()
