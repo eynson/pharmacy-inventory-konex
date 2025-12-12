@@ -4,14 +4,10 @@ import com.eynson.pharmacy_inventory.application.dto.request.CreateMedicineReque
 import com.eynson.pharmacy_inventory.application.dto.request.UpdateMedicineRequest;
 import com.eynson.pharmacy_inventory.application.dto.response.MedicineResponse;
 import com.eynson.pharmacy_inventory.domain.model.Medicine;
-import com.eynson.pharmacy_inventory.domain.model.Money;
-import com.eynson.pharmacy_inventory.domain.model.Quantity;
 import com.eynson.pharmacy_inventory.domain.port.in.CreateMedicineUseCase;
 import com.eynson.pharmacy_inventory.domain.port.in.UpdateMedicineUseCase;
 import org.mapstruct.Mapper;
 import org.springframework.stereotype.Component;
-
-import java.math.BigDecimal;
 
 @Component
 @Mapper(componentModel = "spring")

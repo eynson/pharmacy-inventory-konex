@@ -37,19 +37,81 @@ public class MedicineEntity {
     public MedicineEntity() {
     }
 
-    public MedicineEntity(String id, String name, String factoryLaboratory,
-                          LocalDateTime manufacturingDate, LocalDateTime expirationDate,
-                          Integer quantityInStock, java.math.BigDecimal unitValue,
-                          LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this.id = id;
-        this.name = name;
-        this.factoryLaboratory = factoryLaboratory;
-        this.manufacturingDate = manufacturingDate;
-        this.expirationDate = expirationDate;
-        this.quantityInStock = quantityInStock;
-        this.unitValue = unitValue;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
+    private MedicineEntity(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.factoryLaboratory = builder.factoryLaboratory;
+        this.manufacturingDate = builder.manufacturingDate;
+        this.expirationDate = builder.expirationDate;
+        this.quantityInStock = builder.quantityInStock;
+        this.unitValue = builder.unitValue;
+        this.createdAt = builder.createdAt;
+        this.updatedAt = builder.updatedAt;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private String id;
+        private String name;
+        private String factoryLaboratory;
+        private LocalDateTime manufacturingDate;
+        private LocalDateTime expirationDate;
+        private Integer quantityInStock;
+        private java.math.BigDecimal unitValue;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+
+        public Builder id(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder factoryLaboratory(String factoryLaboratory) {
+            this.factoryLaboratory = factoryLaboratory;
+            return this;
+        }
+
+        public Builder manufacturingDate(LocalDateTime manufacturingDate) {
+            this.manufacturingDate = manufacturingDate;
+            return this;
+        }
+
+        public Builder expirationDate(LocalDateTime expirationDate) {
+            this.expirationDate = expirationDate;
+            return this;
+        }
+
+        public Builder quantityInStock(Integer quantityInStock) {
+            this.quantityInStock = quantityInStock;
+            return this;
+        }
+
+        public Builder unitValue(java.math.BigDecimal unitValue) {
+            this.unitValue = unitValue;
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder updatedAt(LocalDateTime updatedAt) {
+            this.updatedAt = updatedAt;
+            return this;
+        }
+
+        public MedicineEntity build() {
+            return new MedicineEntity(this);
+        }
     }
 
     public String getId() {

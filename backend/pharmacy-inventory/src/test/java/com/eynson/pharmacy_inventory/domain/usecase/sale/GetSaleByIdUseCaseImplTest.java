@@ -38,7 +38,7 @@ class GetSaleByIdUseCaseImplTest {
         // GIVEN
         String saleIdStr = "sale-001";
         
-        var sale = Sale.reconstruct(
+        var sale = Sale.reconstruct(new Sale.SaleReconstructionData(
                 SaleId.from(saleIdStr),
                 MedicineId.from("med-001"),
                 "Aspirin",
@@ -47,7 +47,7 @@ class GetSaleByIdUseCaseImplTest {
                 Money.from(BigDecimal.valueOf(275.00)),
                 LocalDateTime.now(),
                 LocalDateTime.now()
-        );
+        ));
 
         when(saleRepository.findById(saleIdStr))
                 .thenReturn(Optional.of(sale));
@@ -82,7 +82,7 @@ class GetSaleByIdUseCaseImplTest {
         // GIVEN
         String saleIdStr = "sale-002";
         
-        var sale = Sale.reconstruct(
+        var sale = Sale.reconstruct(new Sale.SaleReconstructionData(
                 SaleId.from(saleIdStr),
                 MedicineId.from("med-002"),
                 "Ibuprofen",
@@ -91,7 +91,7 @@ class GetSaleByIdUseCaseImplTest {
                 Money.from(BigDecimal.valueOf(375.00)),
                 LocalDateTime.of(2024, 12, 1, 10, 30),
                 LocalDateTime.of(2024, 12, 1, 10, 30)
-        );
+        ));
 
         when(saleRepository.findById(saleIdStr))
                 .thenReturn(Optional.of(sale));
@@ -112,7 +112,7 @@ class GetSaleByIdUseCaseImplTest {
         // GIVEN
         String saleIdStr = "sale-003";
         
-        var sale = Sale.reconstruct(
+        var sale = Sale.reconstruct(new Sale.SaleReconstructionData(
                 SaleId.from(saleIdStr),
                 MedicineId.from("med-003"),
                 "Paracetamol",
@@ -121,7 +121,7 @@ class GetSaleByIdUseCaseImplTest {
                 Money.from(BigDecimal.valueOf(168.75)),
                 LocalDateTime.now(),
                 LocalDateTime.now()
-        );
+        ));
 
         when(saleRepository.findById(saleIdStr))
                 .thenReturn(Optional.of(sale));

@@ -24,15 +24,12 @@ public class CreateSaleUseCaseImpl implements CreateSaleUseCase {
     @Override
     public Sale execute(CreateSaleCommand command) {
         try {
-            // Validar datos
             validateCommand(command);
 
-            // Obtener la medicina
             MedicineId medicineId = MedicineId.from(command.medicineId());
             Medicine medicine = medicineRepository.findById(medicineId)
                     .orElseThrow(() -> new MedicineNotFoundException(command.medicineId()));
 
-            // Validar que hay stock suficiente
             if (!medicine.getQuantityInStock().isAvailable(command.quantity())) {
                 throw new InsufficientStockException(
                         command.quantity(),
@@ -40,7 +37,6 @@ public class CreateSaleUseCaseImpl implements CreateSaleUseCase {
                 );
             }
 
-            // Crear la venta
             Sale sale = Sale.create(
                     medicineId,
                     medicine.getName(),
@@ -48,11 +44,9 @@ public class CreateSaleUseCaseImpl implements CreateSaleUseCase {
                     medicine.getUnitValue()
             );
 
-            // Actualizar el stock de la medicina
             medicine.sellUnits(command.quantity());
             medicineRepository.save(medicine);
 
-            // Guardar la venta
             return saleRepository.save(sale);
         } catch (IllegalArgumentException e) {
             throw new InvalidMedicineDataException(e.getMessage(), e);

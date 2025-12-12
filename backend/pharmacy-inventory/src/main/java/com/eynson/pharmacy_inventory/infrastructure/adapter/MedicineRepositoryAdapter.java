@@ -10,9 +10,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 public class MedicineRepositoryAdapter implements MedicineRepositoryPort {
@@ -24,17 +22,17 @@ public class MedicineRepositoryAdapter implements MedicineRepositoryPort {
 
     @Override
     public Medicine save(Medicine medicine) {
-        var entity = new MedicineEntity(
-                medicine.getId().getValue(),
-                medicine.getName(),
-                medicine.getFactoryLaboratory(),
-                medicine.getManufacturingDate(),
-                medicine.getExpirationDate(),
-                medicine.getQuantityInStock().getValue(),
-                medicine.getUnitValue().getAmount(),
-                medicine.getCreatedAt(),
-                medicine.getUpdatedAt()
-        );
+        var entity = MedicineEntity.builder()
+                .id(medicine.getId().getValue())
+                .name(medicine.getName())
+                .factoryLaboratory(medicine.getFactoryLaboratory())
+                .manufacturingDate(medicine.getManufacturingDate())
+                .expirationDate(medicine.getExpirationDate())
+                .quantityInStock(medicine.getQuantityInStock().getValue())
+                .unitValue(medicine.getUnitValue().getAmount())
+                .createdAt(medicine.getCreatedAt())
+                .updatedAt(medicine.getUpdatedAt())
+                .build();
         var saved = medicineJpaRepository.save(entity);
         return toDomain(saved);
     }
@@ -60,7 +58,7 @@ public class MedicineRepositoryAdapter implements MedicineRepositoryPort {
         
         var content = result.getContent().stream()
                 .map(this::toDomain)
-                .collect(Collectors.toList());
+                .toList();
         
         return new PaginatedResult<>(
                 content,
@@ -105,15 +103,17 @@ public class MedicineRepositoryAdapter implements MedicineRepositoryPort {
 
     private Medicine toDomain(MedicineEntity entity) {
         return Medicine.reconstruct(
-                MedicineId.from(entity.getId()),
-                entity.getName(),
-                entity.getFactoryLaboratory(),
-                entity.getManufacturingDate(),
-                entity.getExpirationDate(),
-                entity.getQuantityInStock(),
-                Money.from(entity.getUnitValue()),
-                entity.getCreatedAt(),
-                entity.getUpdatedAt()
+                new Medicine.MedicineReconstructionData(
+                        MedicineId.from(entity.getId()),
+                        entity.getName(),
+                        entity.getFactoryLaboratory(),
+                        entity.getManufacturingDate(),
+                        entity.getExpirationDate(),
+                        entity.getQuantityInStock(),
+                        Money.from(entity.getUnitValue()),
+                        entity.getCreatedAt(),
+                        entity.getUpdatedAt()
+                )
         );
     }
 }

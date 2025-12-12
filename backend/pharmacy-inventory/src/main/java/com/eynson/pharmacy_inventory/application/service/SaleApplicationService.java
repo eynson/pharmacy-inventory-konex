@@ -10,11 +10,7 @@ import com.eynson.pharmacy_inventory.domain.port.in.GetSalesByDateRangeUseCase;
 import com.eynson.pharmacy_inventory.domain.port.in.GetSaleByIdUseCase;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class SaleApplicationService {
@@ -49,18 +45,14 @@ public class SaleApplicationService {
         LocalDateTime endDate;
         
         try {
-            // Intentar parsear como ISO_DATE_TIME primero
             startDate = LocalDateTime.parse(request.startDate(), DATE_FORMATTER);
         } catch (Exception e) {
-            // Si falla, intentar como fecha simple (yyyy-MM-dd) y convertir a inicio del día
             startDate = java.time.LocalDate.parse(request.startDate()).atStartOfDay();
         }
         
         try {
-            // Intentar parsear como ISO_DATE_TIME primero
             endDate = LocalDateTime.parse(request.endDate(), DATE_FORMATTER);
         } catch (Exception e) {
-            // Si falla, intentar como fecha simple (yyyy-MM-dd) y convertir a fin del día
             endDate = java.time.LocalDate.parse(request.endDate()).atTime(23, 59, 59);
         }
         
@@ -73,7 +65,7 @@ public class SaleApplicationService {
         var sales = getSalesByDateRangeUseCase.execute(query);
         var saleResponses = sales.stream()
                 .map(saleMapper::toResponse)
-                .collect(Collectors.toList());
+                .toList();
 
         return new PagedSaleResponse(
                 saleResponses,

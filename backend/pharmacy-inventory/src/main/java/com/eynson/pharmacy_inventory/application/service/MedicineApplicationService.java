@@ -6,15 +6,12 @@ import com.eynson.pharmacy_inventory.application.dto.request.UpdateMedicineReque
 import com.eynson.pharmacy_inventory.application.dto.response.MedicineResponse;
 import com.eynson.pharmacy_inventory.application.dto.response.PagedMedicineResponse;
 import com.eynson.pharmacy_inventory.application.mapper.MedicineMapper;
-import com.eynson.pharmacy_inventory.domain.model.Medicine;
 import com.eynson.pharmacy_inventory.domain.port.in.CreateMedicineUseCase;
 import com.eynson.pharmacy_inventory.domain.port.in.DeleteMedicineUseCase;
 import com.eynson.pharmacy_inventory.domain.port.in.GetMedicineByIdUseCase;
 import com.eynson.pharmacy_inventory.domain.port.in.GetMedicinesUseCase;
 import com.eynson.pharmacy_inventory.domain.port.in.UpdateMedicineUseCase;
 import org.springframework.stereotype.Service;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class MedicineApplicationService {
@@ -71,7 +68,7 @@ public class MedicineApplicationService {
         var result = getMedicinesUseCase.execute(query);
         var medicineResponses = result.content().stream()
                 .map(medicineMapper::toResponse)
-                .collect(Collectors.toList());
+                .toList();
         return new PagedMedicineResponse(
                 medicineResponses,
                 result.currentPage(),

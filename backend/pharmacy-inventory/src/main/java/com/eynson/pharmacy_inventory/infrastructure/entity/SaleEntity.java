@@ -35,17 +35,74 @@ public class SaleEntity {
     public SaleEntity() {
     }
 
-    public SaleEntity(String id, String medicineId, String medicineName,
-                      Integer quantitySold, BigDecimal unitValue, BigDecimal totalValue,
-                      LocalDateTime saleDateTime, LocalDateTime createdAt) {
-        this.id = id;
-        this.medicineId = medicineId;
-        this.medicineName = medicineName;
-        this.quantitySold = quantitySold;
-        this.unitValue = unitValue;
-        this.totalValue = totalValue;
-        this.saleDateTime = saleDateTime;
-        this.createdAt = createdAt;
+    private SaleEntity(Builder builder) {
+        this.id = builder.id;
+        this.medicineId = builder.medicineId;
+        this.medicineName = builder.medicineName;
+        this.quantitySold = builder.quantitySold;
+        this.unitValue = builder.unitValue;
+        this.totalValue = builder.totalValue;
+        this.saleDateTime = builder.saleDateTime;
+        this.createdAt = builder.createdAt;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private String id;
+        private String medicineId;
+        private String medicineName;
+        private Integer quantitySold;
+        private BigDecimal unitValue;
+        private BigDecimal totalValue;
+        private LocalDateTime saleDateTime;
+        private LocalDateTime createdAt;
+
+        public Builder id(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder medicineId(String medicineId) {
+            this.medicineId = medicineId;
+            return this;
+        }
+
+        public Builder medicineName(String medicineName) {
+            this.medicineName = medicineName;
+            return this;
+        }
+
+        public Builder quantitySold(Integer quantitySold) {
+            this.quantitySold = quantitySold;
+            return this;
+        }
+
+        public Builder unitValue(BigDecimal unitValue) {
+            this.unitValue = unitValue;
+            return this;
+        }
+
+        public Builder totalValue(BigDecimal totalValue) {
+            this.totalValue = totalValue;
+            return this;
+        }
+
+        public Builder saleDateTime(LocalDateTime saleDateTime) {
+            this.saleDateTime = saleDateTime;
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public SaleEntity build() {
+            return new SaleEntity(this);
+        }
     }
 
     public String getId() {

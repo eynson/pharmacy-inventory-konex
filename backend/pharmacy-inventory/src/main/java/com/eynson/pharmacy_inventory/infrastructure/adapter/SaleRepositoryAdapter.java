@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 public class SaleRepositoryAdapter implements SaleRepositoryPort {
@@ -24,16 +23,16 @@ public class SaleRepositoryAdapter implements SaleRepositoryPort {
 
     @Override
     public Sale save(Sale sale) {
-        var entity = new SaleEntity(
-                sale.getId().getValue(),
-                sale.getMedicineId().getValue(),
-                sale.getMedicineName(),
-                sale.getQuantitySold().getValue(),
-                sale.getUnitValue().getAmount(),
-                sale.getTotalValue().getAmount(),
-                sale.getSaleDateTime(),
-                sale.getCreatedAt()
-        );
+        var entity = SaleEntity.builder()
+                .id(sale.getId().getValue())
+                .medicineId(sale.getMedicineId().getValue())
+                .medicineName(sale.getMedicineName())
+                .quantitySold(sale.getQuantitySold().getValue())
+                .unitValue(sale.getUnitValue().getAmount())
+                .totalValue(sale.getTotalValue().getAmount())
+                .saleDateTime(sale.getSaleDateTime())
+                .createdAt(sale.getCreatedAt())
+                .build();
         var saved = saleJpaRepository.save(entity);
         return toDomain(saved);
     }
@@ -58,7 +57,7 @@ public class SaleRepositoryAdapter implements SaleRepositoryPort {
                 .skip((long) page * pageSize)
                 .limit(pageSize)
                 .map(this::toDomain)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -77,7 +76,7 @@ public class SaleRepositoryAdapter implements SaleRepositoryPort {
                 org.springframework.data.domain.PageRequest.of(page, pageSize)
         );
         return new SaleRepositoryPort.PaginatedResult<>(
-                result.getContent().stream().map(this::toDomain).collect(Collectors.toList()),
+                result.getContent().stream().map(this::toDomain).toList(),
                 result.getTotalPages(),
                 result.getTotalElements(),
                 page,
@@ -87,14 +86,16 @@ public class SaleRepositoryAdapter implements SaleRepositoryPort {
 
     private Sale toDomain(SaleEntity entity) {
         return Sale.reconstruct(
-                SaleId.from(entity.getId()),
-                MedicineId.from(entity.getMedicineId()),
-                entity.getMedicineName(),
-                entity.getQuantitySold(),
-                Money.from(entity.getUnitValue()),
-                Money.from(entity.getTotalValue()),
-                entity.getSaleDateTime(),
-                entity.getCreatedAt()
+                new Sale.SaleReconstructionData(
+                        SaleId.from(entity.getId()),
+                        MedicineId.from(entity.getMedicineId()),
+                        entity.getMedicineName(),
+                        entity.getQuantitySold(),
+                        Money.from(entity.getUnitValue()),
+                        Money.from(entity.getTotalValue()),
+                        entity.getSaleDateTime(),
+                        entity.getCreatedAt()
+                )
         );
     }
 }

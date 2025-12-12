@@ -28,7 +28,7 @@ class SaleMapperTest {
     @DisplayName("should map sale to response")
     void shouldMapSaleToResponse() {
         // GIVEN
-        var sale = Sale.reconstruct(
+        var sale = Sale.reconstruct(new Sale.SaleReconstructionData(
                 SaleId.from("sale-001"),
                 MedicineId.from("med-001"),
                 "Aspirin",
@@ -37,7 +37,7 @@ class SaleMapperTest {
                 Money.from(BigDecimal.valueOf(275.00)),
                 LocalDateTime.of(2024, 12, 10, 10, 30),
                 LocalDateTime.of(2024, 12, 10, 10, 30)
-        );
+        ));
 
         // WHEN
         var response = saleMapper.toResponse(sale);
@@ -57,7 +57,7 @@ class SaleMapperTest {
     void shouldPreserveSaleDetailsInResponseMapping() {
         // GIVEN
         var saleDateTime = LocalDateTime.of(2024, 11, 15, 14, 45);
-        var sale = Sale.reconstruct(
+        var sale = Sale.reconstruct(new Sale.SaleReconstructionData(
                 SaleId.from("sale-002"),
                 MedicineId.from("med-002"),
                 "Ibuprofen",
@@ -66,7 +66,7 @@ class SaleMapperTest {
                 Money.from(BigDecimal.valueOf(375.00)),
                 saleDateTime,
                 LocalDateTime.now()
-        );
+        ));
 
         // WHEN
         var response = saleMapper.toResponse(sale);
@@ -85,7 +85,7 @@ class SaleMapperTest {
     @DisplayName("should handle large values in sale response mapping")
     void shouldHandleLargeValuesInSaleResponseMapping() {
         // GIVEN
-        var sale = Sale.reconstruct(
+        var sale = Sale.reconstruct(new Sale.SaleReconstructionData(
                 SaleId.from("sale-003"),
                 MedicineId.from("med-003"),
                 "Premium Medicine",
@@ -94,7 +94,7 @@ class SaleMapperTest {
                 Money.from(BigDecimal.valueOf(99990.00)),
                 LocalDateTime.now(),
                 LocalDateTime.now()
-        );
+        ));
 
         // WHEN
         var response = saleMapper.toResponse(sale);
@@ -109,7 +109,7 @@ class SaleMapperTest {
     @DisplayName("should map sale with decimal values correctly")
     void shouldMapSaleWithDecimalValuesCorrectly() {
         // GIVEN
-        var sale = Sale.reconstruct(
+        var sale = Sale.reconstruct(new Sale.SaleReconstructionData(
                 SaleId.from("sale-004"),
                 MedicineId.from("med-004"),
                 "Paracetamol",
@@ -118,7 +118,7 @@ class SaleMapperTest {
                 Money.from(BigDecimal.valueOf(168.75)),
                 LocalDateTime.now(),
                 LocalDateTime.now()
-        );
+        ));
 
         // WHEN
         var response = saleMapper.toResponse(sale);
@@ -140,7 +140,7 @@ class SaleMapperTest {
         var totalValue = BigDecimal.valueOf(599.29);
         var saleDateTime = LocalDateTime.of(2024, 10, 20, 15, 00);
 
-        var sale = Sale.reconstruct(
+        var sale = Sale.reconstruct(new Sale.SaleReconstructionData(
                 SaleId.from(saleId),
                 MedicineId.from(medicineId),
                 medicineName,
@@ -149,7 +149,7 @@ class SaleMapperTest {
                 Money.from(totalValue),
                 saleDateTime,
                 LocalDateTime.now()
-        );
+        ));
 
         // WHEN
         var response = saleMapper.toResponse(sale);

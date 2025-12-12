@@ -36,7 +36,6 @@ public class Medicine {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // Factory method para crear una nueva medicina
     public static Medicine create(
             String name,
             String factoryLaboratory,
@@ -55,8 +54,22 @@ public class Medicine {
         );
     }
 
-    // Factory method para reconstructir desde persistencia
-    public static Medicine reconstruct(
+    public static Medicine reconstruct(MedicineReconstructionData data) {
+        Medicine medicine = new Medicine(
+                data.id(),
+                data.name(),
+                data.factoryLaboratory(),
+                data.manufacturingDate(),
+                data.expirationDate(),
+                Quantity.from(data.quantityInStock()),
+                data.unitValue()
+        );
+        medicine.createdAt = data.createdAt();
+        medicine.updatedAt = data.updatedAt();
+        return medicine;
+    }
+
+    public record MedicineReconstructionData(
             MedicineId id,
             String name,
             String factoryLaboratory,
@@ -65,22 +78,9 @@ public class Medicine {
             Integer quantityInStock,
             Money unitValue,
             LocalDateTime createdAt,
-            LocalDateTime updatedAt) {
-        Medicine medicine = new Medicine(
-                id,
-                name,
-                factoryLaboratory,
-                manufacturingDate,
-                expirationDate,
-                Quantity.from(quantityInStock),
-                unitValue
-        );
-        medicine.createdAt = createdAt;
-        medicine.updatedAt = updatedAt;
-        return medicine;
-    }
+            LocalDateTime updatedAt
+    ) {}
 
-    // Métodos de validación
     private void validateBasicData(String name, String factoryLaboratory) {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("El nombre de la medicina no puede estar vacío");
@@ -104,7 +104,6 @@ public class Medicine {
         }
     }
 
-    // Métodos de negocio
     public void updateStock(Integer quantity) {
         this.quantityInStock = Quantity.from(quantity);
         this.updatedAt = LocalDateTime.now();
@@ -132,7 +131,6 @@ public class Medicine {
         return dateTime.isAfter(expirationDate);
     }
 
-    // Getters
     public MedicineId getId() {
         return id;
     }

@@ -38,7 +38,7 @@ class SaleRepositoryAdapterTest {
     @DisplayName("should save sale and return domain object")
     void shouldSaveSaleAndReturnDomainObject() {
         // GIVEN
-        var sale = Sale.reconstruct(
+        var sale = Sale.reconstruct(new Sale.SaleReconstructionData(
                 SaleId.from("sale-001"),
                 MedicineId.from("med-001"),
                 "Aspirin",
@@ -47,18 +47,18 @@ class SaleRepositoryAdapterTest {
                 Money.from(BigDecimal.valueOf(275.00)),
                 LocalDateTime.now(),
                 LocalDateTime.now()
-        );
+        ));
         
-        var entity = new SaleEntity(
-                sale.getId().getValue(),
-                sale.getMedicineId().getValue(),
-                sale.getMedicineName(),
-                sale.getQuantitySold().getValue(),
-                sale.getUnitValue().getAmount(),
-                sale.getTotalValue().getAmount(),
-                sale.getSaleDateTime(),
-                sale.getCreatedAt()
-        );
+        var entity = SaleEntity.builder()
+                .id(sale.getId().getValue())
+                .medicineId(sale.getMedicineId().getValue())
+                .medicineName(sale.getMedicineName())
+                .quantitySold(sale.getQuantitySold().getValue())
+                .unitValue(sale.getUnitValue().getAmount())
+                .totalValue(sale.getTotalValue().getAmount())
+                .saleDateTime(sale.getSaleDateTime())
+                .createdAt(sale.getCreatedAt())
+                .build();
 
         when(saleJpaRepository.save(any(SaleEntity.class)))
                 .thenReturn(entity);
@@ -78,16 +78,16 @@ class SaleRepositoryAdapterTest {
     void shouldFindSaleByIdString() {
         // GIVEN
         String saleId = "sale-001";
-        var entity = new SaleEntity(
-                saleId,
-                "med-001",
-                "Aspirin",
-                50,
-                BigDecimal.valueOf(5.50),
-                BigDecimal.valueOf(275.00),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
+        var entity = SaleEntity.builder()
+                .id(saleId)
+                .medicineId("med-001")
+                .medicineName("Aspirin")
+                .quantitySold(50)
+                .unitValue(BigDecimal.valueOf(5.50))
+                .totalValue(BigDecimal.valueOf(275.00))
+                .saleDateTime(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
+                .build();
 
         when(saleJpaRepository.findById(saleId))
                 .thenReturn(Optional.of(entity));
@@ -156,16 +156,16 @@ class SaleRepositoryAdapterTest {
         LocalDateTime startDate = LocalDateTime.of(2024, 12, 1, 0, 0);
         LocalDateTime endDate = LocalDateTime.of(2024, 12, 31, 23, 59);
 
-        var entity1 = new SaleEntity(
-                "sale-001",
-                "med-001",
-                "Aspirin",
-                50,
-                BigDecimal.valueOf(5.50),
-                BigDecimal.valueOf(275.00),
-                LocalDateTime.of(2024, 12, 10, 10, 30),
-                LocalDateTime.of(2024, 12, 10, 10, 30)
-        );
+        var entity1 = SaleEntity.builder()
+                .id("sale-001")
+                .medicineId("med-001")
+                .medicineName("Aspirin")
+                .quantitySold(50)
+                .unitValue(BigDecimal.valueOf(5.50))
+                .totalValue(BigDecimal.valueOf(275.00))
+                .saleDateTime(LocalDateTime.of(2024, 12, 10, 10, 30))
+                .createdAt(LocalDateTime.of(2024, 12, 10, 10, 30))
+                .build();
 
         when(saleJpaRepository.findByDateRange(startDate, endDate))
                 .thenReturn(List.of(entity1));

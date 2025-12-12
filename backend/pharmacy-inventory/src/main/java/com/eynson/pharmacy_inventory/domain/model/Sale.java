@@ -33,7 +33,6 @@ public class Sale {
         this.createdAt = LocalDateTime.now();
     }
 
-    // Factory method para crear una nueva venta
     public static Sale create(
             MedicineId medicineId,
             String medicineName,
@@ -53,8 +52,20 @@ public class Sale {
         );
     }
 
-    // Factory method para reconstruir desde persistencia
-    public static Sale reconstruct(
+    public static Sale reconstruct(SaleReconstructionData data) {
+        Sale sale = new Sale(
+                data.id(),
+                data.medicineId(),
+                data.medicineName(),
+                Quantity.from(data.quantitySold()),
+                data.unitValue(),
+                data.totalValue(),
+                data.saleDateTime()
+        );
+        return sale;
+    }
+
+    public record SaleReconstructionData(
             SaleId id,
             MedicineId medicineId,
             String medicineName,
@@ -62,19 +73,8 @@ public class Sale {
             Money unitValue,
             Money totalValue,
             LocalDateTime saleDateTime,
-            LocalDateTime createdAt) {
-        Sale sale = new Sale(
-                id,
-                medicineId,
-                medicineName,
-                Quantity.from(quantitySold),
-                unitValue,
-                totalValue,
-                saleDateTime
-        );
-        // Note: We can't set createdAt directly, but it's set in constructor
-        return sale;
-    }
+            LocalDateTime createdAt
+    ) {}
 
     private void validateData(
             MedicineId medicineId,
@@ -95,7 +95,6 @@ public class Sale {
         }
     }
 
-    // Getters
     public SaleId getId() {
         return id;
     }

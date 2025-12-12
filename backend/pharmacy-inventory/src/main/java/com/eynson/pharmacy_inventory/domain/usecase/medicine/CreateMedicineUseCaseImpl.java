@@ -19,22 +19,17 @@ public class CreateMedicineUseCaseImpl implements CreateMedicineUseCase {
     @Override
     public Medicine execute(CreateMedicineCommand command) {
         try {
-            // Validar datos
             validateCommand(command);
 
-            // Verificar que no exista una medicina con el mismo nombre y fabricante
             if (medicineRepository.findByNameAndFactoryLaboratory(command.name().trim(), command.factoryLaboratory().trim()).isPresent()) {
                 throw new IllegalArgumentException("Ya existe una medicina con el nombre '" + command.name().trim() + "' y fabricante '" + command.factoryLaboratory().trim() + "'");
             }
 
-            // Parsear fechas
             LocalDateTime manufacturingDate = parseDate(command.manufacturingDate());
             LocalDateTime expirationDate = parseDate(command.expirationDate());
 
-            // Crear el valor monetario
             Money unitValue = Money.from(command.unitValue());
 
-            // Crear la medicina (el constructor realiza validaciones de negocio)
             Medicine medicine = Medicine.create(
                     command.name().trim(),
                     command.factoryLaboratory().trim(),
@@ -44,7 +39,6 @@ public class CreateMedicineUseCaseImpl implements CreateMedicineUseCase {
                     unitValue
             );
 
-            // Guardar en el repositorio
             return medicineRepository.save(medicine);
         } catch (IllegalArgumentException e) {
             throw new InvalidMedicineDataException(e.getMessage(), e);

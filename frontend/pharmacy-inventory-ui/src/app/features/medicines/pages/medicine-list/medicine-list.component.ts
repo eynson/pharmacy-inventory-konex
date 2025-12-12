@@ -85,7 +85,6 @@ export class MedicineListComponent implements OnInit {
   }
 
   sellMedicine(medicine: Medicine): void {
-    // Guardar el medicamento completo en sessionStorage para que persista a través de la navegación
     sessionStorage.setItem('medicineToSell', JSON.stringify(medicine));
     this.router.navigate(['/sales', 'new']);
   }

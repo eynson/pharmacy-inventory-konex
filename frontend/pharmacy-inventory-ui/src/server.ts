@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { join } from 'node:path';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
@@ -19,7 +19,7 @@ app.use(
 /**
  * Fallback to index.html for SPA routing
  */
-app.get('*', (req, res) => {
+app.get('*', (req: Request, res: Response) => {
   res.sendFile(join(browserDistFolder, 'index.html'));
 });
 

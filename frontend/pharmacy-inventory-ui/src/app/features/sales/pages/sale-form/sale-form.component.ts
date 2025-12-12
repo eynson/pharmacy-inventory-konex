@@ -37,7 +37,6 @@ export class SaleFormComponent implements OnInit {
     this.medicineService.getMedicines(0, 1000).subscribe({
       next: (response: PagedMedicineResponse) => {
         this.medicines = response.content.filter(m => m.quantityInStock > 0);
-        // Después de cargar, preseleccionar si viene del botón Vender
         this.tryPreselectMedicine();
       },
       error: (error) => {
@@ -47,7 +46,6 @@ export class SaleFormComponent implements OnInit {
   }
 
   private tryPreselectMedicine(): void {
-    // Obtener el medicamento completo del sessionStorage (guardado cuando se hace click en Vender)
     const medicineStr = sessionStorage.getItem('medicineToSell');
     
     if (medicineStr) {
@@ -55,10 +53,8 @@ export class SaleFormComponent implements OnInit {
         const medicine = JSON.parse(medicineStr) as Medicine;
         const medicineId = medicine.id;
         
-        // Asegurarse de que el medicamento esté en la lista
         const medicineInList = this.medicines.find(m => m.id === medicineId);
         if (!medicineInList) {
-          // Si el medicamento no está en la lista, agregarlo
           this.medicines.push(medicine);
         }
         
@@ -67,10 +63,8 @@ export class SaleFormComponent implements OnInit {
           this.selectedMedicine = medicine;
         }, 100);
         
-        // Limpiar el sessionStorage después de usarlo
         sessionStorage.removeItem('medicineToSell');
       } catch (error) {
-        // Error silencioso si no hay medicamento guardado
       }
     }
   }

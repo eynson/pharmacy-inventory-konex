@@ -41,7 +41,7 @@ class GetSalesByDateRangeUseCaseImplTest {
         LocalDateTime startDate = LocalDateTime.of(2024, 12, 1, 0, 0);
         LocalDateTime endDate = LocalDateTime.of(2024, 12, 31, 23, 59);
         
-        var sale1 = Sale.reconstruct(
+        var sale1 = Sale.reconstruct(new Sale.SaleReconstructionData(
                 SaleId.from("sale-001"),
                 MedicineId.from("med-001"),
                 "Aspirin",
@@ -50,9 +50,9 @@ class GetSalesByDateRangeUseCaseImplTest {
                 Money.from(BigDecimal.valueOf(275.00)),
                 LocalDateTime.of(2024, 12, 10, 10, 30),
                 LocalDateTime.of(2024, 12, 10, 10, 30)
-        );
+        ));
         
-        var sale2 = Sale.reconstruct(
+        var sale2 = Sale.reconstruct(new Sale.SaleReconstructionData(
                 SaleId.from("sale-002"),
                 MedicineId.from("med-001"),
                 "Aspirin",
@@ -61,7 +61,7 @@ class GetSalesByDateRangeUseCaseImplTest {
                 Money.from(BigDecimal.valueOf(165.00)),
                 LocalDateTime.of(2024, 12, 20, 14, 15),
                 LocalDateTime.of(2024, 12, 20, 14, 15)
-        );
+        ));
 
         var sales = List.of(sale1, sale2);
 
@@ -90,7 +90,7 @@ class GetSalesByDateRangeUseCaseImplTest {
         LocalDateTime startDate = LocalDateTime.of(2024, 11, 1, 0, 0);
         LocalDateTime endDate = LocalDateTime.of(2024, 11, 30, 23, 59);
         
-        var sale = Sale.reconstruct(
+        var sale = Sale.reconstruct(new Sale.SaleReconstructionData(
                 SaleId.from("sale-003"),
                 MedicineId.from("med-002"),
                 "Ibuprofen",
@@ -99,7 +99,7 @@ class GetSalesByDateRangeUseCaseImplTest {
                 Money.from(BigDecimal.valueOf(281.25)),
                 LocalDateTime.of(2024, 11, 15, 9, 0),
                 LocalDateTime.of(2024, 11, 15, 9, 0)
-        );
+        ));
 
         var sales = List.of(sale);
 

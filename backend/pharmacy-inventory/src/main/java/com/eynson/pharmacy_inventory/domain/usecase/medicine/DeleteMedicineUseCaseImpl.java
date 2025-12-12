@@ -20,7 +20,6 @@ public class DeleteMedicineUseCaseImpl implements DeleteMedicineUseCase {
 
         MedicineId id = MedicineId.from(medicineId);
 
-        // Verificar que existe antes de intentar eliminar
         if (!medicineRepository.existsById(id)) {
             throw new MedicineNotFoundException(medicineId);
         }

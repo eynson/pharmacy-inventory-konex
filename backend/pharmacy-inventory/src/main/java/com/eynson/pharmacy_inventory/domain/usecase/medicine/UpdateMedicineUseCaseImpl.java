@@ -19,17 +19,14 @@ public class UpdateMedicineUseCaseImpl implements UpdateMedicineUseCase {
     @Override
     public Medicine execute(UpdateMedicineCommand command) {
         try {
-            // Validar que el ID es requerido
             if (command.id() == null || command.id().trim().isEmpty()) {
                 throw new IllegalArgumentException("El ID del medicamento es requerido");
             }
 
-            // Buscar medicina existente
             MedicineId medicineId = MedicineId.from(command.id());
             Medicine medicine = medicineRepository.findById(medicineId)
                     .orElseThrow(() -> new MedicineNotFoundException(command.id()));
 
-            // Usar valores existentes si no se proporcionan nuevos valores
             String name = (command.name() != null && !command.name().trim().isEmpty()) ? command.name().trim() : medicine.getName();
             String factoryLaboratory = (command.factoryLaboratory() != null && !command.factoryLaboratory().trim().isEmpty()) ? command.factoryLaboratory().trim() : medicine.getFactoryLaboratory();
             LocalDateTime manufacturingDate = (command.manufacturingDate() != null && !command.manufacturingDate().trim().isEmpty()) ? parseDate(command.manufacturingDate()) : medicine.getManufacturingDate();
@@ -37,7 +34,6 @@ public class UpdateMedicineUseCaseImpl implements UpdateMedicineUseCase {
             Integer quantityInStock = (command.quantityInStock() != null) ? command.quantityInStock() : medicine.getQuantityInStock().getValue();
             Money unitValue = (command.unitValue() != null && !command.unitValue().trim().isEmpty()) ? Money.from(command.unitValue()) : medicine.getUnitValue();
 
-            // Validar datos requeridos
             if (name == null || name.isEmpty()) {
                 throw new IllegalArgumentException("El nombre del medicamento es requerido");
             }
@@ -54,20 +50,20 @@ public class UpdateMedicineUseCaseImpl implements UpdateMedicineUseCase {
                 throw new IllegalArgumentException("La cantidad en stock debe ser mayor o igual a 0");
             }
 
-            // Reconstruir medicina con nuevos datos
             Medicine updatedMedicine = Medicine.reconstruct(
-                    medicineId,
-                    name,
-                    factoryLaboratory,
-                    manufacturingDate,
-                    expirationDate,
-                    quantityInStock,
-                    unitValue,
-                    medicine.getCreatedAt(),
-                    LocalDateTime.now()
+                    new Medicine.MedicineReconstructionData(
+                            medicineId,
+                            name,
+                            factoryLaboratory,
+                            manufacturingDate,
+                            expirationDate,
+                            quantityInStock,
+                            unitValue,
+                            medicine.getCreatedAt(),
+                            LocalDateTime.now()
+                    )
             );
 
-            // Guardar cambios
             return medicineRepository.save(updatedMedicine);
         } catch (IllegalArgumentException e) {
             throw new InvalidMedicineDataException(e.getMessage(), e);

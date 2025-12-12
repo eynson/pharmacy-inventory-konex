@@ -50,17 +50,17 @@ class MedicineRepositoryAdapterTest {
                 Money.from(BigDecimal.valueOf(5.50))
         );
         
-        var entity = new MedicineEntity(
-                medicine.getId().getValue(),
-                medicine.getName(),
-                medicine.getFactoryLaboratory(),
-                medicine.getManufacturingDate(),
-                medicine.getExpirationDate(),
-                medicine.getQuantityInStock().getValue(),
-                medicine.getUnitValue().getAmount(),
-                medicine.getCreatedAt(),
-                medicine.getUpdatedAt()
-        );
+        var entity = MedicineEntity.builder()
+                .id(medicine.getId().getValue())
+                .name(medicine.getName())
+                .factoryLaboratory(medicine.getFactoryLaboratory())
+                .manufacturingDate(medicine.getManufacturingDate())
+                .expirationDate(medicine.getExpirationDate())
+                .quantityInStock(medicine.getQuantityInStock().getValue())
+                .unitValue(medicine.getUnitValue().getAmount())
+                .createdAt(medicine.getCreatedAt())
+                .updatedAt(medicine.getUpdatedAt())
+                .build();
 
         when(medicineJpaRepository.save(any(MedicineEntity.class)))
                 .thenReturn(entity);
@@ -80,17 +80,17 @@ class MedicineRepositoryAdapterTest {
     void shouldFindMedicineById() {
         // GIVEN
         String medicineId = "med-001";
-        var entity = new MedicineEntity(
-                medicineId,
-                "Aspirin",
-                "Bayer",
-                LocalDateTime.now().minusYears(1),
-                LocalDateTime.now().plusYears(1),
-                100,
-                BigDecimal.valueOf(5.50),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
+        var entity = MedicineEntity.builder()
+                .id(medicineId)
+                .name("Aspirin")
+                .factoryLaboratory("Bayer")
+                .manufacturingDate(LocalDateTime.now().minusYears(1))
+                .expirationDate(LocalDateTime.now().plusYears(1))
+                .quantityInStock(100)
+                .unitValue(BigDecimal.valueOf(5.50))
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
 
         when(medicineJpaRepository.findById(medicineId))
                 .thenReturn(Optional.of(entity));
@@ -159,17 +159,17 @@ class MedicineRepositoryAdapterTest {
     @DisplayName("should find medicines with pagination")
     void shouldFindMedicinesWithPagination() {
         // GIVEN
-        var entity = new MedicineEntity(
-                "med-001",
-                "Aspirin",
-                "Bayer",
-                LocalDateTime.now().minusYears(1),
-                LocalDateTime.now().plusYears(1),
-                100,
-                BigDecimal.valueOf(5.50),
-                LocalDateTime.now(),
-                LocalDateTime.now()
-        );
+        var entity = MedicineEntity.builder()
+                .id("med-001")
+                .name("Aspirin")
+                .factoryLaboratory("Bayer")
+                .manufacturingDate(LocalDateTime.now().minusYears(1))
+                .expirationDate(LocalDateTime.now().plusYears(1))
+                .quantityInStock(100)
+                .unitValue(BigDecimal.valueOf(5.50))
+                .createdAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
+                .build();
 
         Pageable pageable = PageRequest.of(0, 10);
         Page<MedicineEntity> page = new PageImpl<>(List.of(entity), pageable, 1);
