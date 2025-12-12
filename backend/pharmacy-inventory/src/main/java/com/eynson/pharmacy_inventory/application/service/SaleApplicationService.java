@@ -9,6 +9,7 @@ import com.eynson.pharmacy_inventory.domain.port.in.CreateSaleUseCase;
 import com.eynson.pharmacy_inventory.domain.port.in.GetSalesByDateRangeUseCase;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +41,25 @@ public class SaleApplicationService {
     }
 
     public PagedSaleResponse getSalesByDateRange(GetSalesByDateRangeRequest request) {
-        var startDate = LocalDateTime.parse(request.startDate(), DATE_FORMATTER);
-        var endDate = LocalDateTime.parse(request.endDate(), DATE_FORMATTER);
+        LocalDateTime startDate;
+        LocalDateTime endDate;
+        
+        try {
+            // Intentar parsear como ISO_DATE_TIME primero
+            startDate = LocalDateTime.parse(request.startDate(), DATE_FORMATTER);
+        } catch (Exception e) {
+            // Si falla, intentar como fecha simple (yyyy-MM-dd) y convertir a inicio del día
+            startDate = java.time.LocalDate.parse(request.startDate()).atStartOfDay();
+        }
+        
+        try {
+            // Intentar parsear como ISO_DATE_TIME primero
+            endDate = LocalDateTime.parse(request.endDate(), DATE_FORMATTER);
+        } catch (Exception e) {
+            // Si falla, intentar como fecha simple (yyyy-MM-dd) y convertir a fin del día
+            endDate = java.time.LocalDate.parse(request.endDate()).atTime(23, 59, 59);
+        }
+        
         var query = new GetSalesByDateRangeUseCase.GetSalesByDateRangeQuery(
                 startDate,
                 endDate,

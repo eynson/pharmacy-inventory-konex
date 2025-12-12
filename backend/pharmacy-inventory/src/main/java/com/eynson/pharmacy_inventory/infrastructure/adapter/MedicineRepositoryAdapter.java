@@ -58,7 +58,7 @@ public class MedicineRepositoryAdapter implements MedicineRepositoryPort {
                 ? medicineJpaRepository.findByNameOrFactoryLaboratory(search, pageable)
                 : medicineJpaRepository.findAll(pageable);
         
-        var content = result.stream()
+        var content = result.getContent().stream()
                 .map(this::toDomain)
                 .collect(Collectors.toList());
         
@@ -69,6 +69,12 @@ public class MedicineRepositoryAdapter implements MedicineRepositoryPort {
                 page,
                 pageSize
         );
+    }
+
+    @Override
+    public Optional<Medicine> findByName(String name) {
+        return medicineJpaRepository.findByNameIgnoreCase(name)
+                .map(this::toDomain);
     }
 
     @Override

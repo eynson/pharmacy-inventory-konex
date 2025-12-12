@@ -19,29 +19,49 @@ public class UpdateMedicineUseCaseImpl implements UpdateMedicineUseCase {
     @Override
     public Medicine execute(UpdateMedicineCommand command) {
         try {
-            // Validar datos
-            validateCommand(command);
+            // Validar que el ID es requerido
+            if (command.id() == null || command.id().trim().isEmpty()) {
+                throw new IllegalArgumentException("El ID del medicamento es requerido");
+            }
 
             // Buscar medicina existente
             MedicineId medicineId = MedicineId.from(command.id());
             Medicine medicine = medicineRepository.findById(medicineId)
                     .orElseThrow(() -> new MedicineNotFoundException(command.id()));
 
-            // Parsear fechas
-            LocalDateTime manufacturingDate = parseDate(command.manufacturingDate());
-            LocalDateTime expirationDate = parseDate(command.expirationDate());
+            // Usar valores existentes si no se proporcionan nuevos valores
+            String name = (command.name() != null && !command.name().trim().isEmpty()) ? command.name().trim() : medicine.getName();
+            String factoryLaboratory = (command.factoryLaboratory() != null && !command.factoryLaboratory().trim().isEmpty()) ? command.factoryLaboratory().trim() : medicine.getFactoryLaboratory();
+            LocalDateTime manufacturingDate = (command.manufacturingDate() != null && !command.manufacturingDate().trim().isEmpty()) ? parseDate(command.manufacturingDate()) : medicine.getManufacturingDate();
+            LocalDateTime expirationDate = (command.expirationDate() != null && !command.expirationDate().trim().isEmpty()) ? parseDate(command.expirationDate()) : medicine.getExpirationDate();
+            Integer quantityInStock = (command.quantityInStock() != null) ? command.quantityInStock() : medicine.getQuantityInStock().getValue();
+            Money unitValue = (command.unitValue() != null && !command.unitValue().trim().isEmpty()) ? Money.from(command.unitValue()) : medicine.getUnitValue();
 
-            // Crear el valor monetario
-            Money unitValue = Money.from(command.unitValue());
+            // Validar datos requeridos
+            if (name == null || name.isEmpty()) {
+                throw new IllegalArgumentException("El nombre del medicamento es requerido");
+            }
+            if (factoryLaboratory == null || factoryLaboratory.isEmpty()) {
+                throw new IllegalArgumentException("El laboratorio de fabricación es requerido");
+            }
+            if (manufacturingDate == null) {
+                throw new IllegalArgumentException("La fecha de fabricación es requerida");
+            }
+            if (expirationDate == null) {
+                throw new IllegalArgumentException("La fecha de vencimiento es requerida");
+            }
+            if (quantityInStock < 0) {
+                throw new IllegalArgumentException("La cantidad en stock debe ser mayor o igual a 0");
+            }
 
             // Reconstruir medicina con nuevos datos
             Medicine updatedMedicine = Medicine.reconstruct(
                     medicineId,
-                    command.name().trim(),
-                    command.factoryLaboratory().trim(),
+                    name,
+                    factoryLaboratory,
                     manufacturingDate,
                     expirationDate,
-                    command.quantityInStock(),
+                    quantityInStock,
                     unitValue,
                     medicine.getCreatedAt(),
                     LocalDateTime.now()

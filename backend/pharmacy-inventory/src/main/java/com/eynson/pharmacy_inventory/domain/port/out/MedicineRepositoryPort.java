@@ -27,6 +27,11 @@ public interface MedicineRepositoryPort {
     PaginatedResult<Medicine> findAll(Integer page, Integer pageSize, String search, String sortBy);
 
     /**
+     * Obtiene una medicina por su nombre.
+     */
+    Optional<Medicine> findByName(String name);
+
+    /**
      * Elimina una medicina por su ID.
      */
     void deleteById(MedicineId medicineId);

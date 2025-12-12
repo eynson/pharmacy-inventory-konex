@@ -22,6 +22,11 @@ public class CreateMedicineUseCaseImpl implements CreateMedicineUseCase {
             // Validar datos
             validateCommand(command);
 
+            // Verificar que no exista una medicina con el mismo nombre
+            if (medicineRepository.findByName(command.name().trim()).isPresent()) {
+                throw new IllegalArgumentException("Ya existe una medicina con el nombre '" + command.name().trim() + "'");
+            }
+
             // Parsear fechas
             LocalDateTime manufacturingDate = parseDate(command.manufacturingDate());
             LocalDateTime expirationDate = parseDate(command.expirationDate());

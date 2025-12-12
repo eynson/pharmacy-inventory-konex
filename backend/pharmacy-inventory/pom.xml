@@ -99,11 +99,10 @@
 			<optional>true</optional>
 		</dependency>
 
-		<!-- H2 Database for Testing -->
+		<!-- H2 Database -->
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
-			<scope>test</scope>
 		</dependency>
 
 		<!-- Testing: JUnit 5 -->

@@ -12,10 +12,14 @@ import java.util.Optional;
 
 @Repository
 public interface MedicineJpaRepository extends JpaRepository<MedicineEntity, String> {
-    @Query("SELECT m FROM MedicineEntity m WHERE " +
-           "LOWER(m.name) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-           "LOWER(m.factoryLaboratory) LIKE LOWER(CONCAT('%', :search, '%'))")
+    @Query(nativeQuery = true, value = """
+    SELECT m.* FROM medicines m
+    WHERE LOWER(m.name) LIKE LOWER('%' || :search || '%')
+       OR LOWER(m.factory_laboratory) LIKE LOWER('%' || :search || '%')
+""")
     Page<MedicineEntity> findByNameOrFactoryLaboratory(@Param("search") String search, Pageable pageable);
+
+    Optional<MedicineEntity> findByNameIgnoreCase(String name);
 
     Page<MedicineEntity> findAll(Pageable pageable);
 }

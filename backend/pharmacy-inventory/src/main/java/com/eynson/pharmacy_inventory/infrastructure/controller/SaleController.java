@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/sales")
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class SaleController {
     private final SaleApplicationService saleApplicationService;
 

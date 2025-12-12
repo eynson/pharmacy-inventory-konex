@@ -28,15 +28,9 @@ server:
     context-path: /
   port: 8080
 
-# CORS Configuration - por defecto para desarrollo
-app:
-  cors:
-    allowed-origins: "http://localhost:4200,http://localhost:3000"
-
 logging:
   level:
     root: INFO
     com.eynson.pharmacy_inventory: DEBUG
     org.hibernate.SQL: DEBUG
     org.flywaydb: DEBUG
-

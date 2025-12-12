@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: pharmacy-inventory
+  jpa:
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+server:
+  servlet:
+    context-path: /
+  port: 8080
+
+# CORS Configuration - Restringido para producción
+app:
+  cors:
+    allowed-origins: "https://tu-dominio-produccion.com"
+
+logging:
+  level:
+    root: WARN
+    com.eynson.pharmacy_inventory: INFO
+    org.hibernate.SQL: WARN
+    org.flywaydb: INFO
