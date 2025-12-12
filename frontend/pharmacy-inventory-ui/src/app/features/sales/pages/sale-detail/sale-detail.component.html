@@ -1,0 +1,78 @@
+<div class="container-fluid p-4">
+  <p-toast></p-toast>
+
+  <div class="mb-4">
+    <p-button
+      icon="pi pi-arrow-left"
+      label="Volver"
+      severity="secondary"
+      (onClick)="goBack()">
+    </p-button>
+  </div>
+
+  <div class="text-center p-4" *ngIf="loading">
+    <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8"></p-progressSpinner>
+  </div>
+
+  <p-card *ngIf="!loading && sale" class="mt-4">
+    <ng-template pTemplate="header">
+      <h1>📋 Detalles de la Venta</h1>
+    </ng-template>
+
+    <div class="grid gap-4">
+      <div class="col-12 lg:col-6">
+        <div class="detail-item mb-4">
+          <label class="font-semibold">💊 Medicamento:</label>
+          <p class="text-lg">{{ sale.medicineName }}</p>
+        </div>
+      </div>
+
+      <div class="col-12 lg:col-6">
+        <div class="detail-item mb-4">
+          <label class="font-semibold">📅 Fecha de Venta:</label>
+          <p class="text-lg">{{ sale.saleDate | date: 'dd/MM/yyyy HH:mm' }}</p>
+        </div>
+      </div>
+
+      <div class="col-12 lg:col-6">
+        <div class="detail-item mb-4">
+          <label class="font-semibold">📦 Cantidad Vendida:</label>
+          <p class="text-lg"><strong>{{ sale.quantitySold }}</strong> unidades</p>
+        </div>
+      </div>
+
+      <div class="col-12 lg:col-6">
+        <div class="detail-item mb-4">
+          <label class="font-semibold">💵 Valor Unitario:</label>
+          <p class="text-lg">{{ sale.unitValue | currency:'COP':'symbol':'1.2-2' }}</p>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="detail-item p-4" [style]="{'background': '#f0f9ff', 'border': '2px solid #38ef7d', 'border-radius': '8px'}">
+          <label class="font-semibold" [style]="{'font-size': '1.1rem'}">💰 Valor Total:</label>
+          <p [style]="{'font-size': '1.8rem', 'color': '#38ef7d', 'font-weight': 'bold', 'margin-top': '0.5rem'}">
+            {{ sale.totalValue | currency:'COP':'symbol':'1.2-2' }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="flex gap-3 justify-content-end">
+        <p-button
+          label="Volver"
+          icon="pi pi-arrow-left"
+          severity="secondary"
+          (onClick)="goBack()">
+        </p-button>
+      </div>
+    </ng-template>
+  </p-card>
+
+  <p-card *ngIf="!loading && !sale" class="mt-4">
+    <div class="text-center p-4">
+      <p [style]="{'color': '#999'}">No se encontraron detalles de la venta</p>
+    </div>
+  </p-card>
+</div>

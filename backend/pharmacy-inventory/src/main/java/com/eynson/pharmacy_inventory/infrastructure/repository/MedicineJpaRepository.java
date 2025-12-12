@@ -21,5 +21,7 @@ public interface MedicineJpaRepository extends JpaRepository<MedicineEntity, Str
 
     Optional<MedicineEntity> findByNameIgnoreCase(String name);
 
+    Optional<MedicineEntity> findByNameIgnoreCaseAndFactoryLaboratoryIgnoreCase(String name, String factoryLaboratory);
+
     Page<MedicineEntity> findAll(Pageable pageable);
 }

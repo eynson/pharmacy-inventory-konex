@@ -10,6 +10,6 @@ public record SaleResponse(
         Integer quantitySold,
         BigDecimal unitValue,
         BigDecimal totalValue,
-        LocalDateTime saleDateTime
+        LocalDateTime saleDate
 ) {
 }

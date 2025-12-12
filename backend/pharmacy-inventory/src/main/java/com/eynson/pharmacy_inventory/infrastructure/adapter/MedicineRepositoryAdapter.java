@@ -78,6 +78,12 @@ public class MedicineRepositoryAdapter implements MedicineRepositoryPort {
     }
 
     @Override
+    public Optional<Medicine> findByNameAndFactoryLaboratory(String name, String factoryLaboratory) {
+        return medicineJpaRepository.findByNameIgnoreCaseAndFactoryLaboratoryIgnoreCase(name, factoryLaboratory)
+                .map(this::toDomain);
+    }
+
+    @Override
     public void deleteById(MedicineId id) {
         medicineJpaRepository.deleteById(id.getValue());
     }

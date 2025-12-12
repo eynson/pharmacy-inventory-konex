@@ -22,9 +22,9 @@ public class CreateMedicineUseCaseImpl implements CreateMedicineUseCase {
             // Validar datos
             validateCommand(command);
 
-            // Verificar que no exista una medicina con el mismo nombre
-            if (medicineRepository.findByName(command.name().trim()).isPresent()) {
-                throw new IllegalArgumentException("Ya existe una medicina con el nombre '" + command.name().trim() + "'");
+            // Verificar que no exista una medicina con el mismo nombre y fabricante
+            if (medicineRepository.findByNameAndFactoryLaboratory(command.name().trim(), command.factoryLaboratory().trim()).isPresent()) {
+                throw new IllegalArgumentException("Ya existe una medicina con el nombre '" + command.name().trim() + "' y fabricante '" + command.factoryLaboratory().trim() + "'");
             }
 
             // Parsear fechas

@@ -34,4 +34,10 @@ public class SaleController {
         var response = saleApplicationService.getSalesByDateRange(request);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<SaleResponse> getSaleById(@PathVariable String id) {
+        var response = saleApplicationService.getSaleById(id);
+        return ResponseEntity.ok(response);
+    }
 }

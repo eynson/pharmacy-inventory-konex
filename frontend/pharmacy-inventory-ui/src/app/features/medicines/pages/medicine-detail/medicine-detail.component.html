@@ -1,0 +1,74 @@
+<div class="container-fluid p-4" *ngIf="medicine">
+  <div class="mb-4">
+    <p-button
+      icon="pi pi-arrow-left"
+      label="Volver"
+      severity="secondary"
+      (onClick)="goBack()">
+    </p-button>
+  </div>
+
+  <p-card>
+    <ng-template pTemplate="header">
+      <div class="detail-header">
+        <h1>{{ medicine.name }}</h1>
+        <p-tag
+          [value]="medicine.expirationStatus"
+          [severity]="medicine.expirationStatus === 'EXPIRED' ? 'danger' : 'success'">
+        </p-tag>
+      </div>
+    </ng-template>
+
+    <div class="row mb-4" *ngIf="!loading">
+      <div class="col-md-6">
+        <div class="detail-item mb-3">
+          <label>Fabricante</label>
+          <p>{{ medicine.factoryLaboratory }}</p>
+        </div>
+        <div class="detail-item mb-3">
+          <label>Fecha de Fabricación</label>
+          <p>{{ medicine.manufacturingDate | date: 'dd/MM/yyyy' }}</p>
+        </div>
+        <div class="detail-item mb-3">
+          <label>Fecha de Vencimiento</label>
+          <p>{{ medicine.expirationDate | date: 'dd/MM/yyyy' }}</p>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="detail-item mb-3">
+          <label>Cantidad en Stock</label>
+          <p>{{ medicine.quantityInStock }} unidades</p>
+        </div>
+        <div class="detail-item mb-3">
+          <label>Valor Unitario</label>
+          <p>{{ medicine.unitValue | currency:'COP':'symbol':'1.2-2' }}</p>
+        </div>
+        <div class="detail-item mb-3">
+          <label>Valor Total en Inventario</label>
+          <p>{{ (medicine.unitValue * medicine.quantityInStock) | currency:'COP':'symbol':'1.2-2' }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center" *ngIf="loading">
+      <p-progressSpinner [style]="{width: '50px', height: '50px'}" strokeWidth="8"></p-progressSpinner>
+    </div>
+
+    <ng-template pTemplate="footer">
+      <div class="d-flex justify-content-end gap-2">
+        <p-button
+          label="Editar"
+          icon="pi pi-pencil"
+          severity="warning"
+          (onClick)="edit()">
+        </p-button>
+        <p-button
+          label="Cerrar"
+          icon="pi pi-times"
+          severity="secondary"
+          (onClick)="goBack()">
+        </p-button>
+      </div>
+    </ng-template>
+  </p-card>
+</div>

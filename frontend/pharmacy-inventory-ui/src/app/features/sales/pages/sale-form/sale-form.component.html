@@ -1,0 +1,119 @@
+<div class="container-fluid p-4">
+  <p-toast></p-toast>
+
+  <div class="page-header mb-4">
+    <h1>🛒 Nueva Venta</h1>
+  </div>
+
+  <p-card class="mt-4 w-full">
+    <form [formGroup]="saleForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Datos de la Venta -->
+      <div class="mb-4">
+        <h3 class="text-xl font-bold mb-3">🛒 Datos de la Venta</h3>
+        <div class="grid gap-4">
+          <div class="col-12 lg:col-4">
+            <label for="medicine" class="block mb-2 font-semibold">Medicamento</label>
+            <p-dropdown
+              id="medicine"
+              [options]="medicines"
+              optionLabel="name"
+              optionValue="id"
+              formControlName="medicineId"
+              (onChange)="onMedicineChange()"
+              placeholder="Seleccione un medicamento"
+              class="w-full">
+              <ng-template let-medicine pTemplate="item">
+                <div [style]="{'display': 'flex', 'justify-content': 'space-between', 'width': '100%'}">
+                  <span>{{ medicine.name }}</span>
+                  <small>(Disponible: <strong>{{ medicine.quantityInStock }}</strong>)</small>
+                </div>
+              </ng-template>
+            </p-dropdown>
+            <small class="block mt-2 text-red-600" *ngIf="saleForm.get('medicineId')?.invalid && saleForm.get('medicineId')?.touched">
+              ⚠️ Seleccione un medicamento
+            </small>
+          </div>
+
+          <div class="col-12 lg:col-4">
+            <label for="quantity" class="block mb-2 font-semibold">Cantidad a Vender</label>
+            <p-inputNumber
+              id="quantity"
+              formControlName="quantitySold"
+              [useGrouping]="false"
+              placeholder="0"
+              class="w-full">
+            </p-inputNumber>
+            <small class="block mt-2" *ngIf="selectedMedicine">
+              📦 Disponible: <strong>{{ selectedMedicine.quantityInStock }}</strong> unidades
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <p-divider *ngIf="selectedMedicine"></p-divider>
+
+      <!-- Resumen -->
+      <div class="mt-4 mb-4" *ngIf="selectedMedicine">
+        <h3 class="text-xl font-bold mb-3">📋 Resumen de la Venta</h3>
+        <p-panel [toggleable]="false" [style]="{'background': '#f8f9fa', 'border': '1px solid #dee2e6'}">
+          <ng-template pTemplate="header">
+            <div class="flex align-items-center gap-2">
+              <i class="pi pi-calculator" [style]="{'font-size': '1.2rem'}"></i>
+              <span class="font-bold">Detalles</span>
+            </div>
+          </ng-template>
+          
+        <div class="grid gap-4">
+          <div class="col-12 lg:col-4">
+            <p class="mb-3">
+              <strong>💊 Medicamento:</strong><br>
+              {{ selectedMedicine.name }}
+            </p>
+            <p>
+              <strong>💵 Valor Unitario:</strong><br>
+              {{ selectedMedicine.unitValue | currency:'COP':'symbol':'1.2-2' }}
+            </p>
+          </div>
+          <div class="col-12 lg:col-4">
+            <p class="mb-3">
+              <strong>📦 Cantidad:</strong><br>
+              {{ saleForm.get('quantitySold')?.value || 0 }} unidades
+            </p>
+            <p>
+              <strong>📅 Fecha y Hora:</strong><br>
+              {{ (now | date: 'dd/MM/yyyy HH:mm:ss') }}
+            </p>
+          </div>
+          <div class="col-12 lg:col-4">
+            <p>
+              <strong [style]="{'color': '#38ef7d', 'font-size': '1.1rem'}">💰 Total:</strong><br>
+              <span [style]="{'font-size': '1.3rem', 'color': '#38ef7d', 'font-weight': 'bold'}">{{ ((saleForm.get('quantitySold')?.value || 0) * selectedMedicine.unitValue) | currency:'COP':'symbol':'1.2-2' }}</span>
+            </p>
+          </div>
+        </div>
+        </p-panel>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="flex gap-3 justify-content-end mt-5 pt-4 border-top-1 border-gray-200">
+        <p-button
+          label="Cancelar"
+          icon="pi pi-times"
+          severity="secondary"
+          (onClick)="onCancel()"
+          [disabled]="loading"
+          [size]="'large'">
+        </p-button>
+        <p-button
+          type="submit"
+          label="Registrar Venta"
+          icon="pi pi-check"
+          [loading]="loading"
+          [disabled]="saleForm.invalid || loading || !selectedMedicine"
+          [size]="'large'">
+        </p-button>
+      </div>
+    </form>
+  </p-card>
+</div>

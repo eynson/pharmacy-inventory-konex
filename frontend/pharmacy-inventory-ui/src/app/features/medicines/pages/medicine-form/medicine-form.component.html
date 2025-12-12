@@ -1,0 +1,130 @@
+<div class="container-fluid p-4">
+  <p-toast></p-toast>
+
+  <div class="page-header mb-4">
+    <h1>{{ isEditing ? '✏️ Editar Medicamento' : '➕ Nuevo Medicamento' }}</h1>
+  </div>
+
+  <p-card class="mt-4 w-full">
+    <form [formGroup]="medicineForm" (ngSubmit)="onSubmit()">
+      
+      <!-- Información Básica -->
+      <div class="mb-4">
+        <h3 class="text-xl font-bold mb-3">📋 Información Básica</h3>
+        <div class="grid gap-4">
+          <div class="col-12 lg:col-4">
+            <label for="name" class="block mb-2 font-semibold">Nombre del Medicamento</label>
+            <input
+              id="name"
+              pInputText
+              type="text"
+              formControlName="name"
+              class="w-full"
+              placeholder="Ej: Paracetamol 500mg">
+            <small class="block mt-2 text-red-600" *ngIf="medicineForm.get('name')?.invalid && medicineForm.get('name')?.touched">
+              ⚠️ Campo requerido (mínimo 3 caracteres)
+            </small>
+          </div>
+
+          <div class="col-12 lg:col-4">
+            <label for="factory" class="block mb-2 font-semibold">Fabricante</label>
+            <input
+              id="factory"
+              pInputText
+              type="text"
+              formControlName="factoryLaboratory"
+              class="w-full"
+              placeholder="Ej: Laboratorio ABC">
+            <small class="block mt-2 text-red-600" *ngIf="medicineForm.get('factoryLaboratory')?.invalid && medicineForm.get('factoryLaboratory')?.touched">
+              ⚠️ Campo requerido (mínimo 3 caracteres)
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <p-divider></p-divider>
+
+      <!-- Fechas -->
+      <div class="mb-4 mt-4">
+        <h3 class="text-xl font-bold mb-3">📅 Fechas</h3>
+        <div class="grid gap-4">
+          <div class="col-12 lg:col-4">
+            <label for="manufacturingDate" class="block mb-2 font-semibold">Fecha de Fabricación</label>
+            <p-calendar
+              id="manufacturingDate"
+              formControlName="manufacturingDate"
+              dateFormat="dd/mm/yy"
+              [showIcon]="true"
+              placeholder="dd/mm/yy"
+              class="w-full">
+            </p-calendar>
+          </div>
+
+          <div class="col-12 lg:col-4">
+            <label for="expirationDate" class="block mb-2 font-semibold">Fecha de Vencimiento</label>
+            <p-calendar
+              id="expirationDate"
+              formControlName="expirationDate"
+              dateFormat="dd/mm/yy"
+              [showIcon]="true"
+              placeholder="dd/mm/yy"
+              class="w-full">
+            </p-calendar>
+          </div>
+        </div>
+      </div>
+
+      <p-divider></p-divider>
+
+      <!-- Stock y Valor -->
+      <div class="mb-4 mt-4">
+        <h3 class="text-xl font-bold mb-3">💰 Stock y Valor</h3>
+        <div class="grid gap-4">
+          <div class="col-12 lg:col-4">
+            <label for="quantity" class="block mb-2 font-semibold">Cantidad en Stock</label>
+            <p-inputNumber
+              id="quantity"
+              formControlName="quantityInStock"
+              [useGrouping]="false"
+              placeholder="0"
+              class="w-full">
+            </p-inputNumber>
+          </div>
+
+          <div class="col-12 lg:col-4">
+            <label for="unitValue" class="block mb-2 font-semibold">Valor Unitario</label>
+            <p-inputNumber
+              id="unitValue"
+              formControlName="unitValue"
+              mode="currency"
+              currency="COP"
+              [useGrouping]="true"
+              placeholder="0"
+              class="w-full">
+            </p-inputNumber>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botones de Acción -->
+      <div class="flex gap-3 justify-content-end mt-5 pt-4 border-top-1 border-gray-200">
+        <p-button
+          label="Cancelar"
+          icon="pi pi-times"
+          severity="secondary"
+          (onClick)="onCancel()"
+          [disabled]="loading"
+          [size]="'large'">
+        </p-button>
+        <p-button
+          type="submit"
+          label="{{ isEditing ? 'Actualizar' : 'Guardar' }}"
+          icon="pi pi-check"
+          [loading]="loading"
+          [disabled]="medicineForm.invalid || loading"
+          [size]="'large'">
+        </p-button>
+      </div>
+    </form>
+  </p-card>
+</div>

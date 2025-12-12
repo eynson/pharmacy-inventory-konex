@@ -1,0 +1,31 @@
+:host {
+  display: block;
+}
+
+h1 {
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+.detail-item label {
+  font-weight: 600;
+  color: var(--text-color-secondary);
+  font-size: 0.875rem;
+}
+
+.detail-item p {
+  margin: 0.5rem 0 0 0;
+  color: var(--text-color);
+  font-size: 1.1rem;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}

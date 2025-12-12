@@ -1,8 +1,2 @@
-import { RenderMode, ServerRoute } from '@angular/ssr';
-
-export const serverRoutes: ServerRoute[] = [
-  {
-    path: '**',
-    renderMode: RenderMode.Prerender
-  }
-];
+// Server-side routes (not needed for client-only app)
+export const serverRoutes: any[] = [];

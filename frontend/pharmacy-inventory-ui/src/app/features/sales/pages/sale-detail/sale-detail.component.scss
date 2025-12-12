@@ -1,0 +1,16 @@
+:host {
+  display: block;
+}
+
+h1 {
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-end {
+  justify-content: flex-end;
+}

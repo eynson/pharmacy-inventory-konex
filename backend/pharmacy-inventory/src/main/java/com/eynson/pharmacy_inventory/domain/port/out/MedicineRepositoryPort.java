@@ -32,6 +32,11 @@ public interface MedicineRepositoryPort {
     Optional<Medicine> findByName(String name);
 
     /**
+     * Obtiene una medicina por su nombre y fabricante.
+     */
+    Optional<Medicine> findByNameAndFactoryLaboratory(String name, String factoryLaboratory);
+
+    /**
      * Elimina una medicina por su ID.
      */
     void deleteById(MedicineId medicineId);
