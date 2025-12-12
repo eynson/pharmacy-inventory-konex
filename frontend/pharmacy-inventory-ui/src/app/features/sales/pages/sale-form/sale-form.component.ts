@@ -78,7 +78,7 @@ export class SaleFormComponent implements OnInit {
 
   onMedicineChange(): void {
     const medicineId = this.saleForm.get('medicineId')?.value;
-    this.selectedMedicine = this.medicines.find(m => Number(m.id) === Number(medicineId)) || null;
+    this.selectedMedicine = this.medicines.find(m => m.id === medicineId) || null;
   }
 
   validateQuantity(): void {

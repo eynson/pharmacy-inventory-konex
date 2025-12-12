@@ -110,7 +110,7 @@
           label="Registrar Venta"
           icon="pi pi-check"
           [loading]="loading"
-          [disabled]="saleForm.invalid || loading || !selectedMedicine"
+          [disabled]="saleForm.invalid || !selectedMedicine || loading"
           [size]="'large'">
         </p-button>
       </div>
